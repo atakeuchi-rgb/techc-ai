@@ -3,541 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TECH.C AI</title>
 
-<title>TECH.C AI Assistant</title>
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-}
-
-body{
-background:#050816;
-color:white;
-height:100vh;
-display:flex;
-flex-direction:column;
-}
-
-.header{
-background:#081221;
-padding:15px;
-position:relative;
-text-align:center;
-border-bottom:1px solid #00e5ff33;
-}
-
-.header h1{
-color:#00e5ff;
-}
-
-.admin-icon{
-position:absolute;
-right:15px;
-top:15px;
-font-size:22px;
-cursor:pointer;
-}
-
-.chat{
-flex:1;
-overflow-y:auto;
-padding:15px;
-display:flex;
-flex-direction:column;
-gap:10px;
-}
-
-.message{
-padding:12px;
-border-radius:16px;
-max-width:85%;
-line-height:1.6;
-}
-
-.ai{
-background:#111827;
-align-self:flex-start;
-}
-
-.user{
-background:#00e5ff;
-color:black;
-align-self:flex-end;
-}
-
-.input-area{
-display:flex;
-gap:10px;
-padding:10px;
-background:#081221;
-}
-
-.input-area input{
-flex:1;
-padding:14px;
-border:none;
-border-radius:30px;
-font-size:16px;
-}
-
-.send-btn{
-padding:14px 20px;
-border:none;
-border-radius:30px;
-background:#00e5ff;
-font-weight:bold;
-}
-
-.modal{
-display:none;
-position:fixed;
-left:0;
-top:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,.8);
-z-index:999;
-padding:20px;
-overflow:auto;
-}
-
-.modal-content{
-background:#111827;
-padding:20px;
-border-radius:15px;
-max-width:600px;
-margin:auto;
-margin-top:50px;
-}
-
-.modal input,
-.modal textarea{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:10px;
-}
-
-.modal button{
-margin-top:10px;
-padding:12px;
-border:none;
-border-radius:10px;
-cursor:pointer;
-}
-
-.save-btn{
-background:#00e5ff;
-font-weight:bold;
-width:100%;
-}
-
-.close-btn{
-background:#444;
-color:white;
-width:100%;
-}
-
-.faq-item{
-background:#1f2937;
-padding:10px;
-margin-top:10px;
-border-radius:10px;
-}
-
-.delete-btn{
-background:red;
-color:white;
-padding:8px 12px;
-margin-top:10px;
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="header">
+<header class="header">
+    <h1>🤖 TECH.C AI</h1>
+    <p>学校案内アシスタント</p>
 
-<h1>🤖 TECH.C AI</h1>
+    <button class="admin-btn" onclick="showLogin()">
+        ⚙️
+    </button>
+</header>
 
-<p>学校案内アシスタント</p>
+<main class="chat" id="chat">
 
-<div class="admin-icon"
-onclick="openLogin()">
-⚙️
-</div>
+    <div class="message ai">
+        こんにちは😊<br>
+        TECH.Cについて質問してください。
+    </div>
 
-</div>
-
-<div class="chat" id="chat">
-
-<div class="message ai">
-こんにちは😊<br>
-TECH.Cについて質問してください。
-</div>
-
-</div>
+</main>
 
 <div class="input-area">
 
-<input
-id="question"
-placeholder="質問を入力">
+    <input
+        id="question"
+        type="text"
+        placeholder="質問を入力してください">
 
-<button
-class="send-btn"
-onclick="sendMessage()">
-
-送信
-
-</button>
+    <button onclick="sendMessage()">
+        送信
+    </button>
 
 </div>
 
-<!-- ログイン画面 -->
+<!-- ログイン -->
 
-<div
-class="modal"
-id="loginModal">
+<div id="loginModal" class="modal">
 
-<div class="modal-content">
+    <div class="modal-content">
 
-<h2>管理者ログイン</h2>
+        <h2>管理者ログイン</h2>
 
-<input
-type="password"
-id="adminPassword"
-placeholder="パスワード">
+        <input
+            id="password"
+            type="password"
+            placeholder="パスワード">
 
-<button
-class="save-btn"
-onclick="loginAdmin()">
+        <button onclick="login()">
+            ログイン
+        </button>
 
-ログイン
+        <button onclick="closeLogin()">
+            閉じる
+        </button>
 
-</button>
-
-<button
-class="close-btn"
-onclick="closeLogin()">
-
-閉じる
-
-</button>
-
-</div>
+    </div>
 
 </div>
 
 <!-- 管理画面 -->
 
-<div
-class="modal"
-id="adminModal">
+<div id="adminModal" class="modal">
 
-<div class="modal-content">
+    <div class="modal-content">
 
-<h2>FAQ管理</h2>
+        <h2>FAQ管理</h2>
 
-<input
-id="keywords"
-placeholder="学費,授業料,年間費用">
+        <input
+            id="keywords"
+            placeholder="学費,授業料,年間費用">
 
-<textarea
-id="answer"
-rows="4"
-placeholder="回答を入力"></textarea>
+        <textarea
+            id="answer"
+            rows="5"
+            placeholder="回答を入力"></textarea>
 
-<button
-class="save-btn"
-onclick="saveFaq()">
+        <button onclick="saveFaq()">
+            保存
+        </button>
 
-FAQ保存
+        <button onclick="logoutAdmin()">
+            ログアウト
+        </button>
 
-</button>
+        <hr>
 
-<h3 style="margin-top:20px;">
-登録済FAQ
-</h3>
+        <div id="faqList"></div>
 
-<div id="faqList"></div>
-
-<button
-class="close-btn"
-onclick="closeAdmin()">
-
-閉じる
-
-</button>
+    </div>
 
 </div>
 
-</div>
-
-<script>
-
-const ADMIN_PASSWORD =
-"techc2026";
-
-let faq =
-JSON.parse(
-localStorage.getItem("faq")
-) || [
-
-{
-keywords:["学費","授業料"],
-answer:"学費については募集要項をご確認ください。"
-},
-
-{
-keywords:["オープンキャンパス","OC"],
-answer:"オープンキャンパスを定期開催しています。"
-}
-
-];
-
-function saveStorage(){
-
-localStorage.setItem(
-"faq",
-JSON.stringify(faq)
-);
-
-}
-
-function addMessage(text,type){
-
-const chat =
-document.getElementById("chat");
-
-const msg =
-document.createElement("div");
-
-msg.className =
-"message " + type;
-
-msg.innerHTML =
-text.replace(/\n/g,"<br>");
-
-chat.appendChild(msg);
-
-chat.scrollTop =
-chat.scrollHeight;
-
-}
-
-function findAnswer(question){
-
-question =
-question.toLowerCase();
-
-for(const item of faq){
-
-for(const keyword of item.keywords){
-
-if(
-question.includes(
-keyword.toLowerCase()
-)
-){
-return item.answer;
-}
-
-}
-
-}
-
-return `
-申し訳ありません。
-
-まだ登録されていない質問です。
-`;
-
-}
-
-function sendMessage(){
-
-const input =
-document.getElementById("question");
-
-const text =
-input.value.trim();
-
-if(text==="") return;
-
-addMessage(text,"user");
-
-input.value="";
-
-setTimeout(()=>{
-
-addMessage(
-findAnswer(text),
-"ai"
-);
-
-},500);
-
-}
-
-document
-.getElementById("question")
-.addEventListener(
-"keydown",
-function(e){
-
-if(e.key==="Enter"){
-sendMessage();
-}
-
-}
-);
-
-function openLogin(){
-
-document
-.getElementById("loginModal")
-.style.display="block";
-
-}
-
-function closeLogin(){
-
-document
-.getElementById("loginModal")
-.style.display="none";
-
-}
-
-function loginAdmin(){
-
-const pw =
-document
-.getElementById(
-"adminPassword"
-).value;
-
-if(pw===ADMIN_PASSWORD){
-
-closeLogin();
-
-document
-.getElementById("adminModal")
-.style.display="block";
-
-loadFaqList();
-
-}
-else{
-
-alert("パスワードが違います");
-
-}
-
-}
-
-function closeAdmin(){
-
-document
-.getElementById("adminModal")
-.style.display="none";
-
-}
-
-function saveFaq(){
-
-const keywords =
-document
-.getElementById("keywords")
-.value
-.split(",");
-
-const answer =
-document
-.getElementById("answer")
-.value;
-
-if(answer==="") return;
-
-faq.push({
-
-keywords,
-answer
-
-});
-
-saveStorage();
-
-loadFaqList();
-
-document
-.getElementById("keywords")
-.value="";
-
-document
-.getElementById("answer")
-.value="";
-
-alert("保存しました");
-
-}
-
-function deleteFaq(index){
-
-faq.splice(index,1);
-
-saveStorage();
-
-loadFaqList();
-
-}
-
-function loadFaqList(){
-
-const list =
-document
-.getElementById("faqList");
-
-list.innerHTML="";
-
-faq.forEach((item,index)=>{
-
-list.innerHTML += `
-<div class="faq-item">
-
-<b>キーワード</b><br>
-${item.keywords.join(", ")}
-
-<br><br>
-
-<b>回答</b><br>
-${item.answer}
-
-<br>
-
-<button
-class="delete-btn"
-onclick="deleteFaq(${index})">
-
-削除
-
-</button>
-
-</div>
-`;
-
-});
-
-}
-
-</script>
+<script src="app.js"></script>
 
 </body>
 </html>
