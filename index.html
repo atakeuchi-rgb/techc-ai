@@ -12,11 +12,15 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:sans-serif;
+font-family:-apple-system,BlinkMacSystemFont,sans-serif;
 }
 
 body{
 background:#050816;
+background:
+radial-gradient(circle at top left,#00e5ff22,transparent 30%),
+radial-gradient(circle at bottom right,#0066ff22,transparent 40%),
+#050816;
 color:white;
 height:100vh;
 display:flex;
@@ -26,16 +30,50 @@ flex-direction:column;
 .header{
 padding:20px;
 text-align:center;
-border-bottom:1px solid #00e5ff50;
+border-bottom:1px solid rgba(0,229,255,0.2);
+backdrop-filter:blur(10px);
+}
+
+.logo{
+font-size:30px;
+margin-bottom:8px;
 }
 
 .header h1{
 color:#00e5ff;
+font-size:26px;
+font-weight:700;
 }
 
 .header p{
 color:#aaa;
-margin-top:5px;
+font-size:14px;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+padding:15px;
+}
+
+.card{
+background:rgba(255,255,255,.05);
+border:1px solid rgba(0,229,255,.3);
+border-radius:15px;
+padding:15px;
+text-align:center;
+cursor:pointer;
+}
+
+.card:hover{
+border-color:#00e5ff;
+}
+
+.card span{
+font-size:30px;
+display:block;
+margin-bottom:8px;
 }
 
 .chat{
@@ -48,9 +86,9 @@ gap:10px;
 }
 
 .message{
-padding:12px 16px;
+max-width:85%;
+padding:14px;
 border-radius:18px;
-max-width:80%;
 line-height:1.6;
 }
 
@@ -67,8 +105,8 @@ align-self:flex-end;
 
 .input-area{
 display:flex;
-padding:10px;
 gap:10px;
+padding:12px;
 background:#081221;
 }
 
@@ -81,25 +119,19 @@ font-size:16px;
 }
 
 button{
-padding:14px 18px;
+background:#00e5ff;
 border:none;
 border-radius:30px;
-background:#00e5ff;
+padding:14px 20px;
 font-weight:bold;
 cursor:pointer;
 }
 
-.quick{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-padding:15px;
-}
-
-.quick button{
-background:#111827;
-color:white;
-border:1px solid #00e5ff;
+.footer{
+text-align:center;
+padding:10px;
+font-size:12px;
+color:#777;
 }
 
 </style>
@@ -108,24 +140,54 @@ border:1px solid #00e5ff;
 <body>
 
 <div class="header">
-<h1>🤖 TECH.C AI</h1>
+
+<div class="logo">🤖</div>
+
+<h1>TECH.C AI</h1>
+
 <p>学校案内アシスタント β版</p>
+
 </div>
 
-<div class="quick">
+<div class="cards">
 
-<button onclick="quickAsk('学費')">学費</button>
-<button onclick="quickAsk('学科')">学科</button>
-<button onclick="quickAsk('入試')">入試</button>
-<button onclick="quickAsk('オープンキャンパス')">OC</button>
+<div class="card" onclick="quickAsk('ゲーム')">
+<span>🎮</span>
+ゲーム
+</div>
+
+<div class="card" onclick="quickAsk('AI')">
+<span>🤖</span>
+AI
+</div>
+
+<div class="card" onclick="quickAsk('IT')">
+<span>💻</span>
+IT
+</div>
+
+<div class="card" onclick="quickAsk('デザイン')">
+<span>🎨</span>
+デザイン
+</div>
 
 </div>
 
 <div class="chat" id="chat">
 
 <div class="message ai">
-こんにちは😊<br>
-TECH.Cについて質問してください！
+こんにちは😊<br><br>
+
+TECH.Cについて質問してください。<br><br>
+
+例
+<ul>
+<li>学費は？</li>
+<li>AI専攻について</li>
+<li>オープンキャンパスは？</li>
+<li>ゲーム業界を目指したい</li>
+</ul>
+
 </div>
 
 </div>
@@ -134,7 +196,7 @@ TECH.Cについて質問してください！
 
 <input
 id="question"
-placeholder="知りたいことを入力">
+placeholder="質問を入力してください">
 
 <button onclick="sendMessage()">
 送信
@@ -142,31 +204,34 @@ placeholder="知りたいことを入力">
 
 </div>
 
+<div class="footer">
+TECH.C AI Assistant Prototype
+</div>
+
 <script>
 
-const database = {
+const answers = {
 
-学費:
-`TECH.Cの学費については、
-最新の募集要項をご確認ください。
+"ゲーム":
+"ゲーム制作やゲームプログラマーを目指せる専攻があります。",
 
-https://www.tech.ac.jp`,
+"AI":
+"AIエンジニアやデータサイエンス分野を学べる専攻があります。",
 
-学科:
-`ゲーム、esports、AI、
-ITプログラミング、CG、
-デザイン、映像など
-多彩な専攻があります。`,
+"IT":
+"プログラミングやシステム開発について学べる専攻があります。",
 
-入試:
-`総合型選抜（AO入学）、
-推薦入学、
-一般入学などがあります。`,
+"デザイン":
+"CG、グラフィック、映像制作などの分野があります。",
 
-オープンキャンパス:
-`体験授業付きの
-オープンキャンパスを
-定期開催しています。`
+"学費":
+"最新の学費はTECH.C公式サイトをご確認ください。",
+
+"オープンキャンパス":
+"オープンキャンパスは定期開催されています。",
+
+"入試":
+"AO・推薦・一般入学などがあります。AOエントリーは早期入試スタイルで、高校生/留学生/社会人の方対象となります。"
 
 };
 
@@ -186,50 +251,32 @@ function addMessage(text,type){
 const chat =
 document.getElementById("chat");
 
-const div =
+const msg =
 document.createElement("div");
 
-div.className =
+msg.className =
 "message " + type;
 
-div.innerHTML =
-text.replace(/\n/g,"<br>");
+msg.innerHTML =
+text;
 
-chat.appendChild(div);
+chat.appendChild(msg);
 
 chat.scrollTop =
 chat.scrollHeight;
+}
+
+function searchAnswer(text){
+
+for(let key in answers){
+
+if(text.includes(key)){
+return answers[key];
+}
 
 }
 
-function findAnswer(question){
-
-question = question.toLowerCase();
-
-if(question.includes("学費"))
-return database.学費;
-
-if(question.includes("学科"))
-return database.学科;
-
-if(question.includes("入試"))
-return database.入試;
-
-if(question.includes("オープンキャンパス"))
-return database.オープンキャンパス;
-
-if(question.includes("oc"))
-return database.オープンキャンパス;
-
-return `
-申し訳ありません。
-
-まだデータが登録されていません。
-
-今後AI化してTECH.Cサイトから
-自動回答できるようにします。
-`;
-
+return "ありがとうございます。今後AI機能を追加予定です。";
 }
 
 function sendMessage(){
@@ -246,7 +293,7 @@ input.value="";
 setTimeout(()=>{
 
 addMessage(
-findAnswer(text),
+searchAnswer(text),
 "ai"
 );
 
