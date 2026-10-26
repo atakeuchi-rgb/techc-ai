@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>TECH.C AI</title>
+
+style.css
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>🤖 TECH.C AI</h1>
+
+<p>学校案内アシスタント</p>
+
+<button
+class="admin-btn"
+onclick="showLogin()">
+
+⚙️
+
+</button>
+
+</div>
+
+<div
+id="chat"
+class="chat">
+
+<div class="message ai">
+
+こんにちは😊<br>
+TECH.Cについて質問してください。
+
+</div>
+
+</div>
+
+<div class="input-area">
+
+<input
+id="question"
+placeholder="質問してください">
+
+<button onclick="sendMessage()">
+
+送信
+
+</button>
+
+</div>
+
+<div
+id="loginModal"
+class="modal">
+
+<div class="modal-content">
+
+<h2>管理者ログイン</h2>
+
+<input
+id="password"
+type="password"
+placeholder="パスワード">
+
+<button onclick="login()">
+
+ログイン
+
+</button>
+
+<button onclick="closeLogin()">
+
+閉じる
+
+</button>
+
+</div>
+
+</div>
+
+<div
+id="adminModal"
+class="modal">
+
+<div class="modal-content">
+
+<h2>FAQ管理</h2>
+
+<div id="faqList"></div>
+
+</div>
+
+</div>
+
+app.jsscript>
+
+</body>
+</html>
