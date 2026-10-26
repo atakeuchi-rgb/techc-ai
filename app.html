@@ -1,0 +1,348 @@
+const ADMIN_PASSWORD = "d0ratech0411pengu1n";
+
+let editIndex = -1;
+
+let faq = JSON.parse(
+localStorage.getItem("faq")
+) || [
+
+{
+keywords:["学費","授業料","年間費用"],
+answer:"学費の詳細は募集要項をご確認ください。"
+},
+
+{
+keywords:["入試","AO","総合型選抜"],
+answer:"総合型選抜や推薦入学などがあります。"
+}
+
+];
+
+function saveStorage(){
+
+localStorage.setItem(
+"faq",
+JSON.stringify(faq)
+);
+
+}
+
+function addMessage(text,type){
+
+const chat =
+document.getElementById("chat");
+
+const div =
+document.createElement("div");
+
+div.className =
+"message " + type;
+
+div.innerHTML =
+text.replace(/\n/g,"<br>");
+
+chat.appendChild(div);
+
+chat.scrollTop =
+chat.scrollHeight;
+
+}
+
+function findAnswer(question){
+
+question =
+question.toLowerCase();
+
+for(const item of faq){
+
+for(const keyword of item.keywords){
+
+if(
+question.includes(
+keyword.toLowerCase()
+)
+){
+return item.answer;
+}
+
+}
+
+}
+
+return `
+申し訳ありません。
+
+まだFAQに登録されていません。
+`;
+
+}
+
+function sendMessage(){
+
+const input =
+document.getElementById("question");
+
+const text =
+input.value.trim();
+
+if(text===""){
+return;
+}
+
+addMessage(text,"user");
+
+input.value="";
+
+setTimeout(()=>{
+
+addMessage(
+findAnswer(text),
+"ai"
+);
+
+},300);
+
+}
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+document
+.getElementById("question")
+.addEventListener(
+"keydown",
+(e)=>{
+
+if(e.key==="Enter"){
+sendMessage();
+}
+
+}
+);
+
+if(
+localStorage.getItem(
+"adminLoggedIn"
+)==="true"
+){
+openAdmin();
+}
+
+}
+);
+
+function showLogin(){
+
+document
+.getElementById("loginModal")
+.style.display="block";
+
+}
+
+function closeLogin(){
+
+document
+.getElementById("loginModal")
+.style.display="none";
+
+}
+
+function login(){
+
+const pw =
+document
+.getElementById("password")
+.value;
+
+if(
+pw===ADMIN_PASSWORD
+){
+
+localStorage.setItem(
+"adminLoggedIn",
+"true"
+);
+
+closeLogin();
+
+openAdmin();
+
+}else{
+
+alert(
+"パスワードが違います"
+);
+
+}
+
+}
+
+function logoutAdmin(){
+
+localStorage.removeItem(
+"adminLoggedIn"
+);
+
+closeAdmin();
+
+}
+
+function openAdmin(){
+
+document
+.getElementById("adminModal")
+.style.display="block";
+
+loadFaqList();
+
+}
+
+function closeAdmin(){
+
+document
+.getElementById("adminModal")
+.style.display="none";
+
+}
+
+function saveFaq(){
+
+const keywords =
+document
+.getElementById("keywords")
+.value
+.split(",")
+.map(
+k=>k.trim()
+);
+
+const answer =
+document
+.getElementById("answer")
+.value
+.trim();
+
+if(answer===""){
+return;
+}
+
+if(editIndex>=0){
+
+faq[editIndex]={
+keywords,
+answer
+};
+
+editIndex=-1;
+
+}else{
+
+faq.push({
+keywords,
+answer
+});
+
+}
+
+saveStorage();
+
+loadFaqList();
+
+document
+.getElementById("keywords")
+.value="";
+
+document
+.getElementById("answer")
+.value="";
+
+}
+
+function editFaq(index){
+
+const item =
+faq[index];
+
+document
+.getElementById("keywords")
+.value =
+item.keywords.join(",");
+
+document
+.getElementById("answer")
+.value =
+item.answer;
+
+editIndex =
+index;
+
+}
+
+function deleteFaq(index){
+
+if(
+!confirm("削除しますか？")
+){
+return;
+}
+
+faq.splice(index,1);
+
+saveStorage();
+
+loadFaqList();
+
+}
+
+function loadFaqList(){
+
+const list =
+document
+.getElementById("faqList");
+
+list.innerHTML="";
+
+faq.forEach(
+(item,index)=>{
+
+const div =
+document.createElement("div");
+
+div.className =
+"faq-item";
+
+div.innerHTML = `
+<b>キーワード</b><br>
+${item.keywords.join(", ")}
+<br><br>
+
+<b>回答</b><br>
+${item.answer}
+
+<div class="action-area">
+
+<button
+class="edit-btn"
+onclick="editFaq(${index})">
+
+編集
+
+</button>
+
+<button
+class="delete-btn"
+onclick="deleteFaq(${index})">
+
+削除
+
+</button>
+
+</div>
+`;
+
+list.appendChild(div);
+
+});
+
+}
