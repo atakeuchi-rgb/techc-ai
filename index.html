@@ -30,50 +30,17 @@ flex-direction:column;
 .header{
 padding:20px;
 text-align:center;
-border-bottom:1px solid rgba(0,229,255,0.2);
-backdrop-filter:blur(10px);
-}
-
-.logo{
-font-size:30px;
-margin-bottom:8px;
+border-bottom:1px solid rgba(0,229,255,.2);
 }
 
 .header h1{
 color:#00e5ff;
-font-size:26px;
-font-weight:700;
+font-size:28px;
 }
 
 .header p{
 color:#aaa;
-font-size:14px;
-}
-
-.cards{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-padding:15px;
-}
-
-.card{
-background:rgba(255,255,255,.05);
-border:1px solid rgba(0,229,255,.3);
-border-radius:15px;
-padding:15px;
-text-align:center;
-cursor:pointer;
-}
-
-.card:hover{
-border-color:#00e5ff;
-}
-
-.card span{
-font-size:30px;
-display:block;
-margin-bottom:8px;
+margin-top:5px;
 }
 
 .chat{
@@ -99,14 +66,14 @@ align-self:flex-start;
 
 .user{
 background:#00e5ff;
-color:black;
+color:#000;
 align-self:flex-end;
 }
 
 .input-area{
 display:flex;
 gap:10px;
-padding:12px;
+padding:10px;
 background:#081221;
 }
 
@@ -119,19 +86,25 @@ font-size:16px;
 }
 
 button{
-background:#00e5ff;
+padding:14px 20px;
 border:none;
 border-radius:30px;
-padding:14px 20px;
+background:#00e5ff;
 font-weight:bold;
 cursor:pointer;
 }
 
-.footer{
-text-align:center;
-padding:10px;
-font-size:12px;
-color:#777;
+.quick-buttons{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+padding:15px;
+}
+
+.quick-buttons button{
+background:#111827;
+border:1px solid #00e5ff;
+color:white;
 }
 
 </style>
@@ -140,36 +113,27 @@ color:#777;
 <body>
 
 <div class="header">
-
-<div class="logo">🤖</div>
-
-<h1>TECH.C AI</h1>
-
+<h1>🤖 TECH.C AI</h1>
 <p>学校案内アシスタント β版</p>
-
 </div>
 
-<div class="cards">
+<div class="quick-buttons">
 
-<div class="card" onclick="quickAsk('ゲーム')">
-<span>🎮</span>
-ゲーム
-</div>
+<button onclick="quickAsk('学費')">
+学費
+</button>
 
-<div class="card" onclick="quickAsk('AI')">
-<span>🤖</span>
-AI
-</div>
+<button onclick="quickAsk('学科')">
+学科
+</button>
 
-<div class="card" onclick="quickAsk('IT')">
-<span>💻</span>
-IT
-</div>
+<button onclick="quickAsk('入試')">
+入試
+</button>
 
-<div class="card" onclick="quickAsk('デザイン')">
-<span>🎨</span>
-デザイン
-</div>
+<button onclick="quickAsk('オープンキャンパス')">
+OC
+</button>
 
 </div>
 
@@ -177,17 +141,7 @@ IT
 
 <div class="message ai">
 こんにちは😊<br><br>
-
-TECH.Cについて質問してください。<br><br>
-
-例
-<ul>
-<li>学費は？</li>
-<li>AI専攻について</li>
-<li>オープンキャンパスは？</li>
-<li>ゲーム業界を目指したい</li>
-</ul>
-
+TECH.Cについて質問してください。
 </div>
 
 </div>
@@ -204,80 +158,200 @@ placeholder="質問を入力してください">
 
 </div>
 
-<div class="footer">
-TECH.C AI Assistant Prototype
-</div>
-
 <script>
 
-const answers = {
+/***********************************
+FAQデータベース
+ここに追加していくだけ
+***********************************/
 
-"ゲーム":
-"ゲーム制作やゲームプログラマーを目指せる専攻があります。",
+const faq = [
 
-"AI":
-"AIエンジニアやデータサイエンス分野を学べる専攻があります。",
+{
+keywords:[
+"学費",
+"授業料",
+"費用",
+"お金",
+"年間費用",
+"学納金"
+],
+answer:`
+TECH.Cの学費については
+最新の募集要項をご確認ください。
 
-"IT":
-"プログラミングやシステム開発について学べる専攻があります。",
+https://www.tech.ac.jp/
+`
+},
 
-"デザイン":
-"CG、グラフィック、映像制作などの分野があります。",
+{
+keywords:[
+"学科",
+"専攻",
+"コース",
+"どんな学科",
+"学べる分野"
+],
+answer:`
+ゲーム・AI・IT・esports・CG・
+デザイン・映像などを学べます。
+`
+},
 
-"学費":
-"最新の学費はTECH.C公式サイトをご確認ください。",
+{
+keywords:[
+"ai",
+"人工知能",
+"生成ai",
+"chatgpt",
+"aiエンジニア"
+],
+answer:`
+AI分野では生成AIや
+機械学習に関する技術を学べます。
+`
+},
 
-"オープンキャンパス":
-"オープンキャンパスは定期開催されています。",
+{
+keywords:[
+"ゲーム",
+"ゲーム業界",
+"ゲーム制作",
+"ゲームプログラマー",
+"ゲームクリエイター"
+],
+answer:`
+ゲーム制作に関連する
+様々な専攻があります。
+`
+},
 
-"入試":
-"AO・推薦・一般入学などがあります。AOエントリーは早期入試スタイルで、高校生/留学生/社会人の方対象となります。"
+{
+keywords:[
+"入試",
+"ao",
+"総合型選抜",
+"推薦",
+"一般入学"
+],
+answer:`
+総合型選抜（AO）、
+推薦入学、
+一般入学などがあります。
+`
+},
 
-};
+{
+keywords:[
+"オープンキャンパス",
+"oc",
+"学校見学",
+"体験入学"
+],
+answer:`
+オープンキャンパスは
+定期開催されています。
 
-const input =
-document.getElementById("question");
+詳しくは公式サイトを
+ご確認ください。
+`
+},
 
-input.addEventListener("keydown",(e)=>{
-
-if(e.key==="Enter"){
-sendMessage();
+{
+keywords:[
+"就職",
+"就職率",
+"キャリア",
+"就職サポート"
+],
+answer:`
+TECH.Cでは就職サポート制度が
+用意されています。
+`
 }
 
-});
+];
+
+/***********************************
+メッセージ追加
+***********************************/
 
 function addMessage(text,type){
 
 const chat =
 document.getElementById("chat");
 
-const msg =
+const div =
 document.createElement("div");
 
-msg.className =
+div.className =
 "message " + type;
 
-msg.innerHTML =
-text;
+div.innerHTML =
+text.replace(/\n/g,"<br>");
 
-chat.appendChild(msg);
+chat.appendChild(div);
 
 chat.scrollTop =
 chat.scrollHeight;
-}
-
-function searchAnswer(text){
-
-for(let key in answers){
-
-if(text.includes(key)){
-return answers[key];
-}
 
 }
 
-return "ありがとうございます。今後AI機能を追加予定です。";
+/***********************************
+FAQ検索
+***********************************/
+
+function findAnswer(question){
+
+question =
+question.toLowerCase();
+
+for(const item of faq){
+
+for(const keyword of item.keywords){
+
+if(
+question.includes(
+keyword.toLowerCase()
+)
+){
+
+return item.answer;
+
 }
+
+}
+
+}
+
+return `
+申し訳ありません。
+
+まだその質問の回答は
+登録されていません。
+
+今後順次追加予定です。
+`;
+
+}
+
+/***********************************
+送信処理
+***********************************/
+
+const input =
+document.getElementById("question");
+
+input.addEventListener(
+"keydown",
+function(e){
+
+if(e.key==="Enter"){
+sendMessage();
+}
+
+}
+);
 
 function sendMessage(){
 
@@ -290,10 +364,10 @@ addMessage(text,"user");
 
 input.value="";
 
-setTimeout(()=>{
+setTimeout(function(){
 
 addMessage(
-searchAnswer(text),
+findAnswer(text),
 "ai"
 );
 
